@@ -1,139 +1,223 @@
-# NAOHand 🤖✋  
-**Real-time Hand Gesture Recognition on the NAO Humanoid Robot using MediaPipe and OpenCV**
+# 🤖 Gesture-Based Control of the NAO Humanoid Robot Using Computer Vision and MediaPipe
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![NAOqi](https://img.shields.io/badge/NAOqi-SDK-orange.svg)](https://developer.softbankrobotics.com/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green.svg)](https://opencv.org/)
-[![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10+-brightgreen.svg)](https://developers.google.com/mediapipe)
+This repository presents an implementation of **real-time hand gesture recognition** to enable **gesture-based interaction with the NAO humanoid robot** using **Computer Vision** and **MediaPipe Hands**.
 
----
+The system captures images from the **NAO robot camera**, processes them using **MediaPipe**, and identifies basic hand gestures such as **open hand** and **closed hand**. These gestures can be used to control robot behaviors or trigger actions such as **speech feedback**.
 
-## 🧩 Overview
+This work supports the research presented in the article:
 
-This project enables the **NAO humanoid robot** to recognize **hand gestures in real time** using **MediaPipe** for hand landmark detection and **OpenCV** for visualization.  
-Unlike traditional approaches that rely on *data gloves* or physical markers, this method is purely **vision-based**, requiring only the robot’s built-in camera.
-
-The system can detect:
-- Open hand ✋  
-- One to four raised fingers ☝️✌️🤟✋  
-- No gesture detected ❌  
-
-The robot can optionally **speak the recognized gesture** using its built-in **Text-to-Speech (TTS)** engine.
+**Gesture-Based Control of the NAO Humanoid Robot Using Computer Vision and MediaPipe: An Approach for Real-Time Human-Robot Interaction**
 
 ---
 
-## 🚀 Features
-- Real-time video capture from NAO’s camera (RGB, 640×480)
-- Hand landmark detection with Google MediaPipe
-- Automatic gesture classification based on finger position
-- Optional speech feedback (`ALTextToSpeech`)
-- Modular Python implementation with NAOqi SDK integration
+# 📌 Overview
+
+Human–Robot Interaction (HRI) is an important research area in robotics. Vision-based gesture recognition enables **natural and intuitive communication** between humans and robots.
+
+This project implements:
+
+* 📷 Image acquisition from the **NAO camera**
+* ✋ **Hand detection and tracking** using MediaPipe
+* 🔢 **Finger-based gesture recognition**
+* 🗣 Optional **speech feedback using NAO Text-to-Speech**
+* ⚡ **Real-time processing**
+
+The system can be extended to control robot behaviors such as:
+
+* Navigation
+* Movement commands
+* Interaction tasks
+* Educational robotics applications
 
 ---
 
-## 📦 Requirements
+# 🧠 Technologies Used
 
-### Hardware
-- **NAO humanoid robot** (tested on NAO V5)
-- Network connection between NAO and your PC
+The implementation relies on the following technologies:
 
-### Software
-Make sure you have the following installed:
-
-```bash
-pip install qi mediapipe opencv-python numpy
-````
-
-> 💡 *The `qi` module is part of the NAOqi SDK. Ensure it is available in your Python environment.*
+* **Python**
+* **NAOqi SDK**
+* **OpenCV**
+* **MediaPipe**
+* **NumPy**
 
 ---
 
-## ⚙️ Setup
+# ⚙️ System Architecture
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/vitor-souza-ime/naohand.git
-   cd naohand
-   ```
-
-2. Edit the IP address of your NAO robot in `main.py`:
-
-   ```python
-   NAO_IP = "172.15.4.178"   # Replace with your robot’s IP
-   ```
-
-3. Run the program:
-
-   ```bash
-   python main.py
-   ```
-
-4. Press **`q`** to quit.
-
----
-
-## 🧠 How It Works
-
-1. **Camera streaming:**
-   The NAO’s RGB camera feed is obtained via `ALVideoDevice`.
-
-2. **Hand detection:**
-   MediaPipe processes the frames to extract **21 hand landmarks**.
-
-3. **Gesture classification:**
-   The code compares finger tip and base positions to count the number of raised fingers.
-
-4. **Speech output (optional):**
-   The NAO can announce the detected gesture using `ALTextToSpeech`.
-
-5. **Visualization:**
-   Landmarks and gesture labels are overlaid using OpenCV.
-
----
-
-## 🗂️ Project Structure
+The interaction pipeline follows these steps:
 
 ```
-naohand/
+NAO Camera
+     │
+     ▼
+Image Acquisition (ALVideoDevice)
+     │
+     ▼
+Computer Vision Processing
+(OpenCV + MediaPipe)
+     │
+     ▼
+Hand Landmark Detection
+     │
+     ▼
+Gesture Classification
+     │
+     ▼
+Robot Response
+(Text-to-Speech / Control Commands)
+```
+
+---
+
+# 📂 Project Structure
+
+```
+gesture-nao-mediapipe/
 │
-├── main.py           # Main application script
-├── README.md         # Project documentation
-└── requirements.txt  # Optional: dependency list
+├── gesture_nao.py        # Main implementation script
+├── README.md             # Project documentation
+└── requirements.txt      # Python dependencies
 ```
 
 ---
 
-## 📊 Example Output
+# 🔧 Installation
+
+## 1️⃣ Install Python Dependencies
 
 ```bash
-Conectado ao NAO!
-Open Hand t=0.089s
-2 Finger t=0.133s
-No Gesture
+pip install opencv-python mediapipe numpy
 ```
 
-A live video window will display the camera feed with landmarks and recognized gestures.
+If using NAOqi Python SDK:
+
+```bash
+pip install qi
+```
+
+Or install it from the official SoftBank Robotics SDK.
 
 ---
 
-## 🧪 Notes
+# 🤖 NAO Robot Configuration
 
-* For faster detection, ensure good lighting and a clear view of the hand.
-* The system currently detects up to **4 raised fingers** and an **open hand**.
-* The robot’s stiffness is disabled (`setStiffnesses("Body", 0.0)`) to prevent unwanted motion during vision tasks.
+Edit the script and configure the **robot IP address**:
+
+```python
+NAO_IP = "172.15.4.178"
+NAO_PORT = 9559
+```
+
+Make sure:
+
+* Your computer and NAO robot are on the **same network**
+* The **NAOqi services** are running
 
 ---
 
-## 🧑‍💻 Author
+# ▶️ Running the System
 
-**Vitor Souza**
-Intelligent Systems and Robotics Research
-[GitHub: vitor-souza-ime](https://github.com/vitor-souza-ime)
+Execute the script:
+
+```bash
+python gesture_nao.py
+```
+
+The system will:
+
+1. Connect to the NAO robot
+2. Access the robot camera
+3. Detect hands using MediaPipe
+4. Classify gestures
+5. Display results in real time
+
+Press **`q`** to exit.
 
 ---
 
-## 📝 License
+# ✋ Implemented Gestures
 
-This project is released under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+| Gesture     | Description                   |
+| ----------- | ----------------------------- |
+| Open Hand   | Four or more fingers detected |
+| Closed Hand | One or zero fingers detected  |
+| Unknown     | Any other configuration       |
+
+These gestures can easily be extended to support:
+
+* 👍 Thumbs up
+* ✌ Peace sign
+* 👆 Pointing
+* 🖐 Stop command
+
+---
+
+# 📊 Example Output
+
+```
+Open Hand t=0.034s
+Closed Hand t=0.029s
+Open Hand t=0.031s
+```
+
+Where:
+
+* **t** represents the gesture recognition processing time.
+
+---
+
+# 🧪 Research Applications
+
+This project can be used in research areas such as:
+
+* Human-Robot Interaction (HRI)
+* Gesture-based robot control
+* Educational robotics
+* Assistive robotics
+* Social robots
+
+---
+
+# 🚀 Possible Extensions
+
+Future improvements may include:
+
+* Integration with **robot motion commands**
+* Deep learning gesture classification
+* Multimodal interaction (speech + gesture)
+* Reinforcement learning for adaptive interaction
+* Multi-user gesture detection
+
+---
+
+# 📖 Citation
+
+If you use this work in your research, please cite:
+
+```
+Gesture-Based Control of the NAO Humanoid Robot Using Computer Vision 
+and MediaPipe: An Approach for Real-Time Human-Robot Interaction.
+```
+
+---
+
+# 👨‍🏫 Author
+
+**Prof. Vitor Amadeu**
+
+Research areas:
+
+* Robotics
+* Human-Robot Interaction
+* Artificial Intelligence
+* Computer Vision
+* Intelligent Systems
+
+---
+
+# 📜 License
+
+This project is released for **academic and research purposes**.
+
 
