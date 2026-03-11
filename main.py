@@ -36,33 +36,24 @@ hands = mp_hands.Hands(
 )
 
 def detect_gesture(landmarks):
-    # Coordenadas dos dedos
-    index_tip = landmarks[8]
-    middle_tip = landmarks[12]
-    ring_tip = landmarks[16]
-    pinky_tip = landmarks[20]
-    index_mcp = landmarks[5]
-    middle_mcp = landmarks[9]
-    ring_mcp = landmarks[13]
-    pinky_mcp = landmarks[17]
+    finger_tips = [landmarks[8], landmarks[12], landmarks[16], landmarks[20]]
+    finger_mcps = [landmarks[5], landmarks[9], landmarks[13], landmarks[17]]
+    
+    # Polegar (lógica diferente: compara X em vez de Y)
+    thumb_tip = landmarks[4]
+    thumb_ip  = landmarks[3]
+    thumb_up  = thumb_tip.x < thumb_ip.x - 0.02  # para mão direita
 
-    finger_tips = [index_tip, middle_tip, ring_tip, pinky_tip]
-    finger_mcps = [index_mcp, middle_mcp, ring_mcp, pinky_mcp]
-    fingers_up = 0
+    fingers_up = sum(1 for tip, mcp in zip(finger_tips, finger_mcps) if tip.y < mcp.y - 0.05)
 
-    for tip, mcp in zip(finger_tips, finger_mcps):
-        if tip.y < mcp.y - 0.05:
-            fingers_up += 1
+    total_up = fingers_up + (1 if thumb_up else 0)
 
-    if fingers_up == 5:
-        y_positions = [tip.y for tip in finger_tips]
-        if max(y_positions) - min(y_positions) < 0.2:
-            return "Open Hand"
-
-    if fingers_up > 0:
-        return f"{fingers_up} Finger"
-
-    return "No Gesture"
+    if total_up >= 4:
+        return "Open Hand"
+    elif total_up <= 1:
+        return "Closed Hand"
+	else:
+        return "Unknown"
 
 frame_count = 0
 
